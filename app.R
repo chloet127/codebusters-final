@@ -10,8 +10,8 @@ data <- read.xls("./data/world-happiness.xls")
 # scatterplot social support vs happiness for selected country in 2008
 # need to use navbar to make multiple pages
 page_one <- tabPanel(
-  "World",
-  titlePanel("World Happiness"),
+  "Social Support",
+  titlePanel("World Social Support"),
   
   sidebarLayout(
     sidebarPanel(
@@ -37,11 +37,15 @@ page_one <- tabPanel(
 )
 
 page_two <- tabPanel(
-  "US",
-  titlePanel("US Life Expectancy"),
+  "Life Expectancy",
+  titlePanel("World Life Expectancy"),
   
   sidebarLayout(
     sidebarPanel(
+      selectInput("chosenCountry",
+                  label = "Select a country:",
+                  choices = unique(data$Country.name),
+                  multiple = FALSE),
       sliderInput("chosenYears",
                   "Select year range:",
                   min = min(data$Year),
@@ -52,7 +56,7 @@ page_two <- tabPanel(
     ),
     mainPanel(
       tabsetPanel(
-        tabPanel("US", plotOutput("usLife"))
+        tabPanel("Life", plotOutput("lifeExpectancyPlot"))
       )
     )
   )
@@ -84,15 +88,11 @@ server <- function(input, output) {
            y = "Social support")
   })
   
-  output$usMap <- renderPlot({
-    us_data <- reactive({
-      chosen_data %>%
-        filter(chosen_data$Country.name == "United States")
-    })
-    us_data() %>%
+  output$lifeExpectancyPlot <- renderPlot({
+    chosen_data() %>%
       ggplot() +
-      geom_line(aes(x = Year, y = Healthy.life.expectancy.at.birth)) +
-      labs(title = "US life expectancy over time",
+      geom_line(aes(x = Year, y = Healthy.life.expectancy.at.birth, color = Country.name)) +
+      labs(title = "Life expectancy over time",
            x = "Year",
            y = "Life Expectancy")
   })
