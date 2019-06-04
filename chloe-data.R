@@ -21,7 +21,8 @@ map.world$happiness <- world2$Happiness_score[ match(map.world$region, world2$Co
 
 gg <- ggplot()
 gg <- gg + theme(legend.position="right")
-gg <- gg + geom_map(data=map.world, map=map.world, aes(map_id=region, x=long, y=lat, fill=happiness))
+gg <- gg + geom_map(data=map.world, map=map.world, aes(map_id=region, fill=happiness))
+gg <- gg + expand_limits(x = map.world$long, y = map.world$lat)
 
 gg <- gg + scale_fill_gradient(low = "black", high = "#6699FF", guide = "colourbar")
 gg <- gg + xlab("Longitude")

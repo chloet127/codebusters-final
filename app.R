@@ -5,6 +5,8 @@ library("dplyr")
 library("ggplot2")
 library("plotly")
 library("stringr")
+library("readxl")
+library("rworldmap")
 source("chloe-data.R")
 
 data <- as.data.frame(read.xls("./data/world-happiness.xls", verbose = FALSE))
@@ -16,9 +18,11 @@ intro_page <- tabPanel(
 )
 
 page_happy <- tabPanel(
-  "Happiness",
+  "World Map",
   titlePanel("Map of World Happiness"),
-  plotOutput(outputId = "happy", width = "100%", height = "100%")
+  mainPanel(
+    plotOutput(outputId = "happy", width = "800px", height = "600px")
+  )
 )
 
 page_one <- tabPanel(
@@ -76,9 +80,11 @@ conclusion_page <- tabPanel(
   textOutput("conclusion")
 )
 
+
 ui <- fluidPage(
   theme = shinytheme("journal"),
   navbarPage(
+    "Happiness",
     intro_page,
     page_happy,
     page_one,
@@ -101,8 +107,7 @@ server <- function(input, output) {
   })
   
   output$happy <- renderPlot({
-    happy_plot <- gg
-    plot(happy_plot)
+    gg
   })
   
   chosen_data <- reactive({
