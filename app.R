@@ -8,10 +8,6 @@ library("stringr")
 
 data <- as.data.frame(read.xls("./data/world-happiness.xls", verbose = FALSE))
 
-
-# plot time vs social support for selected country in selected year range
-# plot time vs life expectancy for selected country in selected year range
-
 page_one <- tabPanel(
   "Social Support",
   titlePanel("World Social Support"),
@@ -32,9 +28,7 @@ page_one <- tabPanel(
     ),
     
     mainPanel(
-      tabsetPanel(
-        tabPanel("Plot", plotOutput("socialSupportPlot"))
-      )
+      plotOutput("socialSupportPlot")
     )
   )
 )
@@ -58,9 +52,7 @@ page_two <- tabPanel(
                   step = 1)
     ),
     mainPanel(
-      tabsetPanel(
-        tabPanel("Plot", plotOutput("lifeExpectancyPlot"))
-      )
+      plotOutput("lifeExpectancyPlot")
     )
   )
 )
@@ -91,6 +83,7 @@ server <- function(input, output) {
          x = "Year",
          y = "Social support")
   })
+  
   chosen_data1 <- reactive({
     data %>%
       filter(Country.name == input$chosen_Country,
