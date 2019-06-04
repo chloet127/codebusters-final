@@ -59,13 +59,14 @@ page_two <- tabPanel(
     ),
     mainPanel(
       tabsetPanel(
-        tabPanel("Life", plotOutput("lifeExpectancyPlot"))
+        tabPanel("Plot", plotOutput("lifeExpectancyPlot"))
       )
     )
   )
 )
 
 ui <- fluidPage(
+  theme = shinytheme("journal"),
   navbarPage(
     "Happiness",
     page_one,
@@ -74,7 +75,6 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
-  shinytheme("lumen")
   chosen_data <- reactive({
     data %>%
       filter(Country.name == input$chosenCountry,
@@ -84,8 +84,9 @@ server <- function(input, output) {
   
   output$socialSupportPlot <- renderPlot({
     ggplot(data = chosen_data(), 
-           aes(x = Year, y = Social.support)) +
+           aes(x = Year, y = Social.support, color = "Social Support")) +
     geom_line() +
+      scale_color_manual(values = "#6699FF") +
     labs(title = "Social support levels over time",
          x = "Year",
          y = "Social support")
@@ -98,8 +99,9 @@ server <- function(input, output) {
   })
   output$lifeExpectancyPlot <- renderPlot({
     ggplot(data = chosen_data1(), 
-           aes(x = Year, y = Healthy.life.expectancy.at.birth)) +
+           aes(x = Year, y = Healthy.life.expectancy.at.birth, color = "Life Expectancy")) +
     geom_line() +
+      scale_color_manual(values = "#6699FF") +
     labs(title = "Life expectancy over time",
          x = "Year",
          y = "Life Expectancy")
