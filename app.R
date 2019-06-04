@@ -4,11 +4,14 @@ library("shinythemes")
 library("dplyr")
 library("ggplot2")
 library("plotly")
+library("stringr")
 
-data <- read.xls("./data/world-happiness.xls")
+data <- as.data.frame(read.xls("./data/world-happiness.xls", verbose = FALSE))
 
-# scatterplot social support vs happiness for selected country in 2008
-# need to use navbar to make multiple pages
+
+# plot time vs social support for selected country in selected year range
+# plot time vs life expectancy for selected country in selected year range
+
 page_one <- tabPanel(
   "Social Support",
   titlePanel("World Social Support"),
@@ -42,11 +45,11 @@ page_two <- tabPanel(
   
   sidebarLayout(
     sidebarPanel(
-      selectInput("chosenCountry",
+      selectInput("chosen_Country",
                   label = "Select a country:",
                   choices = unique(data$Country.name),
                   multiple = FALSE),
-      sliderInput("chosenYears",
+      sliderInput("chosen_Years",
                   "Select year range:",
                   min = min(data$Year),
                   max = max(data$Year),
@@ -74,29 +77,33 @@ server <- function(input, output) {
   shinytheme("lumen")
   chosen_data <- reactive({
     data %>%
-      filter(Country.name %>% input$chosenCountry,
-             Year >= input$chosenYears[1],
-             Year <= input$chosenYears[2])
+      filter(Country.name == input$chosenCountry,
+             data$Year >= input$chosenYears[1],
+             data$Year <= input$chosenYears[2])
   })
   
   output$socialSupportPlot <- renderPlot({
-    chosen_data() %>%
-      ggplot() +
-      geom_line(aes(x = Year, y = Social.support, color = Country.name)) +
-      labs(title = "Social support levels over time",
-           x = "Year",
-           y = "Social support")
+    ggplot(data = chosen_data(), 
+           aes(x = Year, y = Social.support)) +
+    geom_line() +
+    labs(title = "Social support levels over time",
+         x = "Year",
+         y = "Social support")
   })
-  
+  chosen_data1 <- reactive({
+    data %>%
+      filter(Country.name == input$chosen_Country,
+             data$Year >= input$chosen_Years[1],
+             data$Year <= input$chosen_Years[2])
+  })
   output$lifeExpectancyPlot <- renderPlot({
-    chosen_data() %>%
-      ggplot() +
-      geom_line(aes(x = Year, y = Healthy.life.expectancy.at.birth, color = Country.name)) +
-      labs(title = "Life expectancy over time",
-           x = "Year",
-           y = "Life Expectancy")
+    ggplot(data = chosen_data1(), 
+           aes(x = Year, y = Healthy.life.expectancy.at.birth)) +
+    geom_line() +
+    labs(title = "Life expectancy over time",
+         x = "Year",
+         y = "Life Expectancy")
   })
 }
 
 shinyApp(ui = ui, server = server)
-# US map of life expectancy for given year, hover shows actual expectancy
