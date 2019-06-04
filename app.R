@@ -8,6 +8,12 @@ library("stringr")
 
 data <- as.data.frame(read.xls("./data/world-happiness.xls", verbose = FALSE))
 
+intro_page <- tabPanel(
+  "Introduction",
+  titlePanel("World Happiness Report"),
+  textOutput("introduction")
+)
+
 page_one <- tabPanel(
   "Social Support",
   titlePanel("World Social Support"),
@@ -57,16 +63,36 @@ page_two <- tabPanel(
   )
 )
 
+conclusion_page <- tabPanel(
+  "Conclusion",
+  titlePanel("World Happiness Report"),
+  textOutput("conclusion")
+)
+
 ui <- fluidPage(
   theme = shinytheme("journal"),
   navbarPage(
     "Happiness",
+    intro_page,
     page_one,
-    page_two
+    page_two,
+    conclusion_page
   )
 )
 
 server <- function(input, output) {
+  output$introduction <- renderText({
+    paste0("This project seeks to analyze the variables of social support and
+           life expectancy in comparison to levels of happiness in the countries
+           of the world.  Our data was collected by the United Nations Sustainable
+           Development Solutions Network in partnership with the Ernesto Illy 
+           Foundation.  The World Happiness Report contains data from 2008 to 2018.  
+           We intend to target health care professionals who review related evidence
+           pertaining to our selected variables and happiness.  Our audience wants 
+           to learn about the different facets which can affect happiness and if 
+           social support or life expectancy can have a significant influence.")
+  })
+  
   chosen_data <- reactive({
     data %>%
       filter(Country.name == input$chosenCountry,
@@ -98,6 +124,10 @@ server <- function(input, output) {
     labs(title = "Life expectancy over time",
          x = "Year",
          y = "Life Expectancy")
+  })
+  
+  output$conclusion <- renderText({
+    paste0("Conclusions will go here")
   })
 }
 
