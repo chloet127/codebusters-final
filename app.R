@@ -13,6 +13,13 @@ data <- as.data.frame(read.xls("./data/world-happiness.xls", verbose = FALSE))
 #data <- read_excel("data/world-happiness.xls")
 #names(data) <- gsub(" ", ".", names(data))
 
+## Top 10 and Bottom 10 Countries in happiness
+top_bottom_data <- filter(data, Country.name %in% 
+                          c('Finland', 'Denmark', 'Norway', 'Iceland', 'Netherlands', 
+                            'Switzerland', 'Sweden', 'New Zealand', 'Canada', 'Austria',
+                            'Haiti', 'Botswana', 'Syria', 'Malawi', 'Yemen', 'Rwanda', 
+                            'Tanzania', 'Afghanistan', 'Central African Republic', 
+                            'South Sudan'))
 
 intro_page <- tabPanel(
   "Introduction",
@@ -78,6 +85,23 @@ page_two <- tabPanel(
   )
 )
 
+top_bottom_page <- tabPanel(
+  "Social Support and Life Expectancy",
+  titlePanel("Top 10 / Bottom 10"),
+  
+  sidebarLayout(
+    sidebarPanel(    
+      selectInput("chosenYear",
+                  "Select a Year:",
+                  choices = unique(top_bottom_data$Year),
+                  multiple = FALSE)
+    ),
+    mainPanel(
+      plotOutput("Top10Bottom10Plot")
+    )
+  )
+)
+
 conclusion_page <- tabPanel(
   "Conclusion",
   titlePanel("World Happiness Report"),
@@ -93,6 +117,7 @@ ui <- fluidPage(
     page_happy,
     page_one,
     page_two,
+    top_bottom_page,
     conclusion_page
   )
 )
@@ -158,8 +183,53 @@ server <- function(input, output) {
          y = "Life Expectancy")
   })
   
+  chosen_data2 <- reactive({
+    top_bottom_data %>%
+      filter(top_bottom_data$Year == input$chosenYear)
+  })
+  
+  output$Top10Bottom10Plot <- renderPlot({
+    ggplot(data = chosen_data2(), ## NONE NUMERIC ARUGMENT TO BINARY OPERATOR
+           aes(x = Social.support, y = Healthy.life.expectancy.at.birth, shape = as.factor(am), color = as.factor(am)) +
+             geom_point(size = 3) +
+             scale_color_manual(values = "#6699FF") +
+             labs(title = "Top 10 / Bottom 10",
+                  x = "Social Support",
+                  y = "Life Expectancy"))
+    
+    add_trace(
+      x = c(0:1.0), 
+      y = rnorm(100, mean = 50), 
+      marker = list(color='green'),
+      hoverinfo = 'y',
+      showlegend = F
+    ) %>%
+      layout(
+        title = "Top 10 / Bottom 10",
+        titlefont = list(
+          size = 10
+        ),
+        xaxis = list(
+          zeroline = F
+        ),
+        yaxis = list(
+          hoverformat = '.2f'
+        )
+      )    
+  })
+  
   output$conclusion <- renderText({
-    paste0("Conclusions will go here")
+    paste0("Overall, most countries, whether top 10 or bottom 10 in happiness, 
+           showed increasing life expectancy over the years.  However, the top 
+           10 countries still had higher life expectancies.  Social support 
+           fluctuated, likely due to changes in government or war state of the 
+           country.  Because social support changes throughout the years in 
+           all of the countries, it is difficult to draw a conclusion that it 
+           directly affects the happiness of the country's citizens.  For life 
+           expectancy, although it is generally higher in the top 10 countries, 
+           that may be due to other factors such as healthcare or technological 
+           advances.  While higher life expectancy correlates with happier 
+           countries, it is not possible to say that it causes happiness.")
   })
 }
 
