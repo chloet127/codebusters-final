@@ -10,6 +10,9 @@ library("rworldmap")
 source("chloe-data.R")
 
 data <- as.data.frame(read.xls("./data/world-happiness.xls", verbose = FALSE))
+## Top 10 and Bottom 10 Countries in happiness
+top_bottom_data <- filter(data, Country.name %in% c('Finland', 'Denmark', 'Norway', 'Iceland', 'Netherlands', 'Switzerland', 'Sweden', 'New Zealand', 'Canada', 'Austria',
+                                                  'Haiti', 'Botswana', 'Syria', 'Malawi', 'Yemen', 'Rwanda', 'Tanzania', 'Afghanistan', 'Central African Republic', 'South Sudan'))
 
 intro_page <- tabPanel(
   "Introduction",
@@ -74,6 +77,23 @@ page_two <- tabPanel(
   )
 )
 
+top_bottom_page <- tabPanel(
+  "Social Support and Life Expectancy",
+  titlePanel("Top 10 / Bottom 10"),
+  
+  sidebarLayout(
+    sidebarPanel(    
+      selectInput("chosenYear",
+                  "Select a Year:",
+                  choices = unique(top_bottom_data$Year),
+                  multiple = FALSE)
+    ),
+    mainPanel(
+      plotOutput("Top10Bottom10Plot")
+    )
+  )
+)
+
 conclusion_page <- tabPanel(
   "Conclusion",
   titlePanel("World Happiness Report"),
@@ -89,6 +109,7 @@ ui <- fluidPage(
     page_happy,
     page_one,
     page_two,
+    top_bottom_page,
     conclusion_page
   )
 )
@@ -141,6 +162,41 @@ server <- function(input, output) {
     labs(title = "Life expectancy over time",
          x = "Year",
          y = "Life Expectancy")
+  })
+  
+  chosen_data2 <- reactive({
+    top_bottom_data %>%
+      filter(top_bottom_data$Year == input$chosenYear)
+  })
+  
+  output$Top10Bottom10Plot <- renderPlot({
+    ggplot(data = chosen_data2(), ## NONE NUMERIC ARUGMENT TO BINARY OPERATOR
+           aes(x = Social.support, y = Healthy.life.expectancy.at.birth, shape = as.factor(am), color = as.factor(am)) +
+             geom_point(size = 3) +
+             scale_color_manual(values = "#6699FF") +
+             labs(title = "Top 10 / Bottom 10",
+                  x = "Social Support",
+                  y = "Life Expectancy"))
+    ## Hover text
+    add_trace(
+      x = c(0:1.0), 
+      y = rnorm(100, mean = 50), 
+      marker = list(color='green'),
+      hoverinfo = 'y',
+      showlegend = F
+    ) %>%
+      layout(
+        title = "Top 10 / Bottom 10",
+        titlefont = list(
+          size = 10
+        ),
+        xaxis = list(
+          zeroline = F
+        ),
+        yaxis = list(
+          hoverformat = '.2f'
+        )
+      )    
   })
   
   output$conclusion <- renderText({
