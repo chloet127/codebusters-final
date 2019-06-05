@@ -45,13 +45,10 @@ output$Top10BottomPlot <- renderPlot({
          labs(title = "Top 10 / Bottom 10",
               x = "Social Support",
               y = "Life Expectancy"))
-  
-  plot(x, y, main = "Top 10 / Bottom 10",
-       xlab = Social.support, ylab = Healthy.life.expectancy.at.birth,
-       pch = 19, frame = FALSE) %>%
+  ## Hover text
     add_trace(
-      x = c(1:100), 
-      y = rnorm(100, mean = 5), 
+      x = c(0:1.0), 
+      y = rnorm(100, mean = 50), 
       marker = list(color='green'),
       hoverinfo = 'y',
       showlegend = F
