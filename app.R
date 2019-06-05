@@ -127,7 +127,7 @@ server <- function(input, output) {
     })
     
     output$conclusion <- renderText({
-        paste0("Conclusions will go here")
+        paste0("")
     })
 }
 
