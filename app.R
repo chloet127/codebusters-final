@@ -12,7 +12,7 @@ source("chloe-data.R")
 source("scatter2.R")
 
 #data <- as.data.frame(read.xls("./data/world-happiness.xls", verbose = FALSE))
-data <- read_excel("data/world-happiness.xls")
+data <- read_excel("./data/world-happiness.xls")
 names(data) <- gsub(" ", ".", names(data))
 
 ## Top 10 and Bottom 10 Countries in happiness
