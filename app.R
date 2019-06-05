@@ -9,9 +9,9 @@ library("readxl")
 library("rworldmap")
 source("chloe-data.R")
 
-#data <- as.data.frame(read.xls("./data/world-happiness.xls", verbose = FALSE))
-data <- read_excel("data/world-happiness.xls")
-names(data) <- gsub(" ", ".", names(data))
+data <- as.data.frame(read.xls("./data/world-happiness.xls", verbose = FALSE))
+#data <- read_excel("data/world-happiness.xls")
+#names(data) <- gsub(" ", ".", names(data))
 
 
 intro_page <- tabPanel(
