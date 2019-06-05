@@ -120,7 +120,12 @@ ui <- fluidPage(
     page_two,
     scatters,
     conclusion_page
-  )
+  ),
+  
+  inlineCSS(list(
+    "#introduction" = "font-size:30px; color:#25385e",
+    "#conclusion" = "font-size:30px; color:#25385e"
+  ))
 )
 
 server <- function(input, output) {
@@ -181,7 +186,8 @@ server <- function(input, output) {
       scale_color_manual(values = "#6699FF") +
     labs(title = "Social support levels over time",
          x = "Year",
-         y = "Social support")
+         y = "Social support") + 
+    theme(legend.position="")
   })
   
   chosen_data1 <- reactive({
@@ -197,7 +203,8 @@ server <- function(input, output) {
       scale_color_manual(values = "#6699FF") +
     labs(title = "Life expectancy over time",
          x = "Year",
-         y = "Life Expectancy")
+         y = "Life Expectancy") +
+    theme(legend.position="")
   })
   
   chosen_data2 <- reactive({
