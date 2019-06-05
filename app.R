@@ -86,7 +86,7 @@ page_two <- tabPanel(
 )
 
 top_bottom_page <- tabPanel(
-  "Social Support and Life Expectancy",
+  "Highs & Lows",
   titlePanel("Top 10 / Bottom 10"),
   
   sidebarLayout(
