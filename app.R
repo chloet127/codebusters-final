@@ -90,11 +90,7 @@ conclusion_page <- tabPanel(
   "Conclusion",
   titlePanel("World Happiness Report"),
   
-  verticalLayout(
-    textOutput("sum2018"),
-    textOutput("sumGraphs"),
-    textOutput("conclusion")
-  )
+  textOutput("conclusion")
 )
 
 
@@ -150,7 +146,7 @@ server <- function(input, output) {
     ggplot(data = chosen_data(), 
            aes(x = Year, y = Social.support, color = "Social Support")) +
     geom_line() +
-      scale_color_manual(values = "#6699FF") +
+      scale_color_manual(labels = input$chosenCountry, values = "#6699FF") +
     labs(title = "Social support levels over time",
          x = "Year",
          y = "Social support")
@@ -166,7 +162,7 @@ server <- function(input, output) {
     ggplot(data = chosen_data1(), 
            aes(x = Year, y = Healthy.life.expectancy.at.birth, color = "Life Expectancy")) +
     geom_line() +
-      scale_color_manual(values = "#6699FF") +
+      scale_color_manual(labels = input$chosen_Country, values = "#6699FF") +
     labs(title = "Life expectancy over time",
          x = "Year",
          y = "Life Expectancy")
@@ -185,24 +181,17 @@ server <- function(input, output) {
     p
   })
   
-  output$sum2018 <- renderText({
+  output$conclusion <- renderText({
     paste0("For 2018, our plots show that the top 10 happiest countries are much 
            higher in both social support and life expectancy than the bottom 10.  
            There appears to be a positive correlation between social support and 
            happiness score as well as life expectancy and happiness score.  While 
            there are these correlations, it is not possible to say that they 
-           cause happiness.")
-  })
-  
-  output$sumGraphs <- renderText({
-    paste0("When looking at the line graphs, social support tends to fluctate for 
-           many of the countries, likely due to changes in government leadership 
-           or war state of the country.  Life expectancy increases in most of the 
-           countries--explained by modern advancements in healthcare and technology.")
-  })
-  
-  output$conclusion <- renderText({
-    paste0("Overall, most countries improve in both social support and life expectancy, 
+           cause happiness.  When looking at the line graphs, social support tends 
+           to fluctate for many of the countries, likely due to changes in government 
+           leadership or war state of the country.  Life expectancy increases in most 
+           of the countries--explained by modern advancements in healthcare and technology.  
+           Overall, most countries improve in both social support and life expectancy, 
            but the happiest countries tend to be higher for those variables.")
   })
 }
