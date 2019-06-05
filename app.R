@@ -7,6 +7,7 @@ library("plotly")
 library("stringr")
 library("readxl")
 library("rworldmap")
+library("shinyjs")
 source("chloe-data.R")
 source("scatter2.R")
 
@@ -124,8 +125,8 @@ ui <- fluidPage(
   ),
   
   inlineCSS(list(
-    "#introduction" = "font-size:30px; color:#25385e",
-    "#conclusion" = "font-size:30px; color:#25385e"
+    "#introduction" = "font-size:30px; color:#2980B9",
+    "#conclusion" = "font-size:30px; color:#2980B9"
   ))
 )
 
