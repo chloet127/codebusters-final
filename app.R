@@ -9,9 +9,9 @@ library("readxl")
 library("rworldmap")
 source("chloe-data.R")
 
-data <- as.data.frame(read.xls("./data/world-happiness.xls", verbose = FALSE))
-#data <- read_excel("data/world-happiness.xls")
-#names(data) <- gsub(" ", ".", names(data))
+#data <- as.data.frame(read.xls("./data/world-happiness.xls", verbose = FALSE))
+data <- read_excel("data/world-happiness.xls")
+names(data) <- gsub(" ", ".", names(data))
 
 ## Top 10 and Bottom 10 Countries in happiness
 top_bottom_data <- filter(data, Country.name %in% 
@@ -30,10 +30,8 @@ intro_page <- tabPanel(
 page_happy <- tabPanel(
   "World Map",
   titlePanel("Map of World Happiness"),
-  textOutput("rank"),
-  mainPanel(
-    plotOutput(outputId = "happy", width = "800px", height = "400px")
-  )
+  plotOutput(outputId = "happy", width = "1200px", height = "400px"),
+  textOutput("rank")
 )
 
 page_one <- tabPanel(
@@ -85,19 +83,22 @@ page_two <- tabPanel(
   )
 )
 
-top_bottom_page <- tabPanel(
+
+scatters <- tabPanel(
   "Highs & Lows",
-  titlePanel("Top 10 / Bottom 10"),
-  
-  sidebarLayout(
-    sidebarPanel(    
-      selectInput("chosenYear",
-                  "Select a Year:",
-                  choices = unique(top_bottom_data$Year),
-                  multiple = FALSE)
+  titlePanel("Top 5 & Bottom 5 Countries"),
+  fluidRow(
+    column(2,
+      tableOutput(outputId = "le_tab")
     ),
-    mainPanel(
-      plotOutput("Top10Bottom10Plot")
+    column(2,
+      tableOutput(outputId = "ss_tab")
+    ),
+    column(4,
+      plotOutput(outputId = "le_plot", width = "370px", height = "400px")
+    ),
+    column(4,
+      plotOutput(outputId = "ss_plot", width = "460px", height = "400px")
     )
   )
 )
@@ -117,7 +118,7 @@ ui <- fluidPage(
     page_happy,
     page_one,
     page_two,
-    top_bottom_page,
+    scatters,
     conclusion_page
   )
 )
@@ -139,13 +140,29 @@ server <- function(input, output) {
     gg
   })
   
+  output$ss_plot <- renderPlot({
+    sup
+  })
+  
+  output$ss_tab <- renderTable({
+    ss_table
+  })
+  
+  output$le_plot <- renderPlot({
+    p
+  })
+  
+  output$le_tab <- renderTable({
+    tb_table
+  })
+  
   output$rank <- renderText({
     paste0("The rankings of national happiness are based on a Cantril ladder survey.
            Nationally representative samples of respondents are asked to think of a 
            ladder, with the best possible life for them being a 10, and the worst 
            possible life being a 0. They are then asked to rate their own current 
            lives on that 0 to 10 scale. The report correlates the results with 
-           various life factors. The plot below shows data for the most recent 
+           various life factors. The plot above shows data for the most recent 
            rankings for the year 2019, with Finland ranking the highest with 
            a happiness score of 7.7, and South Sudan with the lowest at 2.8.")
   })
@@ -188,35 +205,6 @@ server <- function(input, output) {
       filter(top_bottom_data$Year == input$chosenYear)
   })
   
-  output$Top10Bottom10Plot <- renderPlot({
-    ggplot(data = chosen_data2(), ## NONE NUMERIC ARUGMENT TO BINARY OPERATOR
-           aes(x = Social.support, y = Healthy.life.expectancy.at.birth, shape = as.factor(am), color = as.factor(am)) +
-             geom_point(size = 3) +
-             scale_color_manual(values = "#6699FF") +
-             labs(title = "Top 10 / Bottom 10",
-                  x = "Social Support",
-                  y = "Life Expectancy"))
-    
-    add_trace(
-      x = c(0:1.0), 
-      y = rnorm(100, mean = 50), 
-      marker = list(color='green'),
-      hoverinfo = 'y',
-      showlegend = F
-    ) %>%
-      layout(
-        title = "Top 10 / Bottom 10",
-        titlefont = list(
-          size = 10
-        ),
-        xaxis = list(
-          zeroline = F
-        ),
-        yaxis = list(
-          hoverformat = '.2f'
-        )
-      )    
-  })
   
   output$conclusion <- renderText({
     paste0("Overall, most countries, whether top 10 or bottom 10 in happiness, 

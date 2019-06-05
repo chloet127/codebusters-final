@@ -1,4 +1,5 @@
 library(dplyr)
+library(ggplot2)
 
 #read in data
 data1 <- read_excel("data/world-happiness.xls")
@@ -8,24 +9,22 @@ names(world2) <- gsub(" ", ".", names(world2))
 
 #filter for relevant data + rename columns for easier access
 tb <- filter(data1, Country.name %in% 
-                            c('Finland', 'Denmark', 'Norway', 'Iceland', 'Netherlands', 
-                              'Switzerland', 'Sweden', 'New Zealand', 'Canada', 'Austria',
-                              'Haiti', 'Botswana', 'Syria', 'Malawi', 'Yemen', 'Rwanda', 
-                              'Tanzania', 'Afghanistan', 'Central African Republic', 
-                              'South Sudan')) %>%
+                            c('Denmark', 'Norway', 'Netherlands','Finland', 'Austria',
+                              'Haiti', 'Malawi', 'Yemen', 'Tanzania', 'Afghanistan')) %>%
       filter(Year == 2018) %>%
       select(Country.name, Healthy.life.expectancy.at.birth) %>% 
       rename(life = Healthy.life.expectancy.at.birth)
+tb_table <- tb %>% arrange(desc(life))
+names(tb_table) <- c("Country", "Life Expectancy")
 
 ss <- filter(data1, Country.name %in% 
-               c('Finland', 'Denmark', 'Norway', 'Iceland', 'Netherlands', 
-                 'Switzerland', 'Sweden', 'New Zealand', 'Canada', 'Austria',
-                 'Haiti', 'Botswana', 'Syria', 'Malawi', 'Yemen', 'Rwanda', 
-                 'Tanzania', 'Afghanistan', 'Central African Republic', 
-                 'South Sudan')) %>%
+               c('Denmark', 'Norway', 'Netherlands','Finland', 'Austria',
+                 'Haiti', 'Malawi', 'Yemen', 'Tanzania', 'Afghanistan')) %>%
   filter(Year == 2018) %>%
   select(Country.name, Social.support) %>% 
   rename(social = Social.support)
+ss_table <- ss %>% arrange(desc(social))
+names(ss_table) <- c("Country", "Social Support")
 
 #match happiness scores to countries
 world2 <- select(world2, Country, Happiness.score)
@@ -38,9 +37,9 @@ p <- ggplot(tb, aes(x=life, y=happiness)) +
         xlab("Healthy Life Expectancy at Birth") + 
         ylab("Happiness Score")
 p <- p + scale_color_hue(labels = c("Bottom 10", "Top 10"))
+p <- p + theme(legend.position="")
 p <- p + labs(color = "")
 
-p
 
 
 sup <- ggplot(ss, aes(x = social, y = happiness)) +
@@ -50,4 +49,9 @@ sup <- ggplot(ss, aes(x = social, y = happiness)) +
 sup <- sup + scale_color_hue(labels = c("Bottom 10", "Top 10"))
 sup <- sup + labs(color = "")
 
-sup
+
+
+
+
+
+
