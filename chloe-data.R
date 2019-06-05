@@ -24,8 +24,10 @@ gg <- gg + theme(legend.position="right")
 gg <- gg + geom_map(data=map.world, map=map.world, aes(map_id=region, fill=happiness))
 gg <- gg + expand_limits(x = map.world$long, y = map.world$lat)
 
-gg <- gg + scale_fill_gradient(low = "black", high = "#6699FF", guide = "colourbar")
+gg <- gg + scale_fill_gradient(low = "black", high = "#6699FF", 
+                              guide = "colourbar", name = "Happiness Score")
 gg <- gg + xlab("Longitude")
 gg <- gg + ylab("Latitude")
 gg <- gg + coord_equal()
 gg
+

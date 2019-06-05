@@ -9,7 +9,10 @@ library("readxl")
 library("rworldmap")
 source("chloe-data.R")
 
-data <- as.data.frame(read.xls("./data/world-happiness.xls", verbose = FALSE))
+#data <- as.data.frame(read.xls("./data/world-happiness.xls", verbose = FALSE))
+data <- read_excel("data/world-happiness.xls")
+names(data) <- gsub(" ", ".", names(data))
+
 
 intro_page <- tabPanel(
   "Introduction",
@@ -20,8 +23,9 @@ intro_page <- tabPanel(
 page_happy <- tabPanel(
   "World Map",
   titlePanel("Map of World Happiness"),
+  textOutput("rank"),
   mainPanel(
-    plotOutput(outputId = "happy", width = "800px", height = "600px")
+    plotOutput(outputId = "happy", width = "800px", height = "400px")
   )
 )
 
@@ -108,6 +112,17 @@ server <- function(input, output) {
   
   output$happy <- renderPlot({
     gg
+  })
+  
+  output$rank <- renderText({
+    paste0("The rankings of national happiness are based on a Cantril ladder survey.
+           Nationally representative samples of respondents are asked to think of a 
+           ladder, with the best possible life for them being a 10, and the worst 
+           possible life being a 0. They are then asked to rate their own current 
+           lives on that 0 to 10 scale. The report correlates the results with 
+           various life factors. The plot below shows data for the most recent 
+           rankings for the year 2019, with Finland ranking the highest with 
+           a happiness score of 7.7, and South Sudan with the lowest at 2.8.")
   })
   
   chosen_data <- reactive({
