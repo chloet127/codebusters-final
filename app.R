@@ -77,7 +77,7 @@ page_two <- tabPanel(
 )
 
 top_bottom_page <- tabPanel(
-  "Highs & Lows",
+  "2018",
   titlePanel("Top 10 / Bottom 10"),
   
   splitLayout(
@@ -89,7 +89,12 @@ top_bottom_page <- tabPanel(
 conclusion_page <- tabPanel(
   "Conclusion",
   titlePanel("World Happiness Report"),
-  textOutput("conclusion")
+  
+  verticalLayout(
+    textOutput("sum2018"),
+    textOutput("sumGraphs"),
+    textOutput("conclusion")
+  )
 )
 
 
@@ -180,18 +185,25 @@ server <- function(input, output) {
     p
   })
   
+  output$sum2018 <- renderText({
+    paste0("For 2018, our plots show that the top 10 happiest countries are much 
+           higher in both social support and life expectancy than the bottom 10.  
+           There appears to be a positive correlation between social support and 
+           happiness score as well as life expectancy and happiness score.  While 
+           there are these correlations, it is not possible to say that they 
+           cause happiness.")
+  })
+  
+  output$sumGraphs <- renderText({
+    paste0("When looking at the line graphs, social support tends to fluctate for 
+           many of the countries, likely due to changes in government leadership 
+           or war state of the country.  Life expectancy increases in most of the 
+           countries--explained by modern advancements in healthcare and technology.")
+  })
+  
   output$conclusion <- renderText({
-    paste0("Overall, most countries, whether top 10 or bottom 10 in happiness, 
-           showed increasing life expectancy over the years.  However, the top 
-           10 countries still had higher life expectancies.  Social support 
-           fluctuated, likely due to changes in government or war state of the 
-           country.  Because social support changes throughout the years in 
-           all of the countries, it is difficult to draw a conclusion that it 
-           directly affects the happiness of the country's citizens.  For life 
-           expectancy, although it is generally higher in the top 10 countries, 
-           that may be due to other factors such as healthcare or technological 
-           advances.  While higher life expectancy correlates with happier 
-           countries, it is not possible to say that it causes happiness.")
+    paste0("Overall, most countries improve in both social support and life expectancy, 
+           but the happiest countries tend to be higher for those variables.")
   })
 }
 
