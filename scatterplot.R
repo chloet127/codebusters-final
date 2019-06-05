@@ -38,7 +38,7 @@ Year_chosen <- reactive({
 })
 
 output$Top10BottomPlot <- renderPlot({
-  ggplot(data = Year_chosen(), 
+  ggplot(data = Year_chosen(), ## NONE NUMERIC ARUGMENT TO BINARY OPERATOR
          aes(x = Social.support, y = Healthy.life.expectancy.at.birth, shape = as.factor(am), color = as.factor(am)) +
          geom_point(size = 3) +
          scale_color_manual(values = "#6699FF") +
