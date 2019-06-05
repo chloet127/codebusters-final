@@ -214,14 +214,14 @@ server <- function(input, output) {
   
   
   output$conclusion <- renderText({
-    paste0("Overall, most countries, whether top 10 or bottom 10 in happiness, 
+    paste0("Overall, most countries, whether top 5 or bottom 5 in happiness, 
            showed increasing life expectancy over the years.  However, the top 
-           10 countries still had higher life expectancies.  Social support 
+           5 countries still had higher life expectancies.  Social support 
            fluctuated, likely due to changes in government or war state of the 
            country.  Because social support changes throughout the years in 
            all of the countries, it is difficult to draw a conclusion that it 
            directly affects the happiness of the country's citizens.  For life 
-           expectancy, although it is generally higher in the top 10 countries, 
+           expectancy, although it is generally higher in the top 5 countries, 
            that may be due to other factors such as healthcare or technological 
            advances.  While higher life expectancy correlates with happier 
            countries, it is not possible to say that it causes happiness.")
