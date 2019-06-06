@@ -46,7 +46,7 @@ sup <- ggplot(ss, aes(x = social, y = happiness)) +
         geom_point(aes(color = cut(happiness, c(10, 6, 0), size=3))) + 
         xlab("Social Support") + 
         ylab("Happiness Score")
-sup <- sup + scale_color_hue(labels = c("Bottom 10", "Top 10"))
+sup <- sup + scale_color_hue(labels = c("Bottom 5", "Top 5"))
 sup <- sup + labs(color = "")
 
 
