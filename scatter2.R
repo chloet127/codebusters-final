@@ -36,7 +36,7 @@ p <- ggplot(tb, aes(x=life, y=happiness)) +
         geom_point(aes(color = cut(happiness, c(10, 6, 0), size=3))) + 
         xlab("Healthy Life Expectancy at Birth") + 
         ylab("Happiness Score")
-p <- p + scale_color_hue(labels = c("Bottom 10", "Top 10"))
+p <- p + scale_color_hue(labels = c("Bottom 5", "Top 5"))
 p <- p + theme(legend.position="")
 p <- p + labs(color = "")
 

@@ -1,0 +1,12 @@
+name: codebusters-final
+title: codebusters-final
+username:
+account: lieslblock
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 967701
+bundleId: 2134333
+url: https://lieslblock.shinyapps.io/codebusters-final/
+when: 1559781575.80707
+asMultiple: FALSE
+asStatic: FALSE
