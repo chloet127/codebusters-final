@@ -127,7 +127,12 @@ server <- function(input, output) {
     })
     
     output$conclusion <- renderText({
-        paste0("")
+        paste0("With the given data, we extracted the top 10 and the bottom 10 happiest countries. 
+               we were able to see the relationship between the two factors: life expectancy and 
+               social support. When comparing the life expentancy and social support in the top and 
+               bottom 10 happiest countries we can see that these factors do in fact play a significant
+               role in world happiness. 
+               ")
     })
 }
 
